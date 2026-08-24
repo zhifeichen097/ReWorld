@@ -96,7 +96,7 @@ On GPUs where 720p VRAM is tight, prefix with `BANKV2_HOT_GPU=0` to keep the ban
 
 ### Interactive mode (single GPU)
 
-Type one mouse key (`i`/`k`/`j`/`l`/`u` — look up/down/left/right/none) and one keyboard key (`w`/`a`/`s`/`d`/`space`/`ctrl`/`q` — translate/none) per 4-latent-frame chunk:
+Type one mouse key (`i`/`k`/`j`/`l`/`u` — look up/down/left/right/none) and one keyboard key (`w`/`a`/`s`/`d` — translate, or `q` — stay) per 4-latent-frame chunk:
 
 ```bash
 python inference_action_v2.py \
