@@ -81,7 +81,7 @@ Please input the keyboard action (e.g. `W`):
 | Input | Keys |
 |---|---|
 | Mouse (look) | `i` up · `k` down · `j` left · `l` right · `u` none |
-| Keyboard (move) | `w` forward · `s` back · `a` left · `d` right · `space` up · `ctrl` down · `q` none |
+| Keyboard (move) | `w` forward · `s` back · `a` left · `d` right · `q` no translation |
 
 Each pair of inputs is applied for one 4-latent-frame chunk with a constant-velocity motion model. Outputs: `interactive_s{sample}.mp4` with a key-press HUD overlay, plus `trajectory.html` (3D plot of the camera path).
 
