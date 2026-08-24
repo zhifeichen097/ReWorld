@@ -1,0 +1,74 @@
+# =====================================================================
+# Plucker 720p inference base config.
+# model_kwargs must match the settings the checkpoint was trained with
+# (rope_spatial_interp ON; fixed head routing at inference).
+# Sampling uses a DMD 4-step LoRA; fallback: drop the LoRA and set
+# inference.sampling_steps to 24.
+# =====================================================================
+num_frame_per_block: 4
+num_training_frames: 96
+is_causal: true
+causal: true
+
+model_kwargs:
+  # Path to the Wan2.2-TI2V-5B base model directory (download from the official
+  # Wan release). Set this to your local path.
+  model_name: ./checkpoints/Wan2.2-TI2V-5B
+  timestep_shift: 5.0
+  local_attn_size:
+    [-1, 12, 12, 12, 12, -1, 12, 12,
+     12, 12, -1, 12, 12, 12, 12, -1,
+     12, 12, 12, 12, -1, 12, 12, -1]
+  inference_local_attn_size: -1
+  max_discrete_actions: 6            # plucker per-token maps are 6-channel
+  control_mode: 'layer-wise'
+  action_embedding_type: "add"
+  use_prope: true
+  rope_spatial_interp: true          # stage-2 plucker trained WITH interp — must match
+  rope_spatial_ref_grid: [12, 20]
+  rope_spatial_cur_grid: [22, 40]
+
+# Set these to your local checkpoint paths (see README for download links).
+generator_ckpt: ./checkpoints/reworld_generator_ema.pt
+lora_ckpt: ./checkpoints/reworld_dmd_lora.pt
+
+warp_denoising_step: false
+num_train_timestep: 1000
+timestep_shift: 5.0
+inference:
+  sampling_steps: 4
+  guidance_scale: 1.0
+guidance_scale: 1.0
+
+seed: 0
+mixed_precision: true
+action_drop_prob: 0.0
+gradient_checkpointing: false
+
+adapter:
+  type: lora
+  rank: 128
+  alpha: 128
+  dropout: 0.0
+  apply_to_critic: true
+  verbose: false
+
+eval_datasets:
+  - name: SimulatedActionDataset
+    params:
+      data_dir: assets/mc_eval_random_keys_96latent_more7.txt   # prompt@keysequence list, one rollout per line
+      source_action_mode: 'standard'
+      target_action_mode: 'plucker_720p'
+      delta_r: 0.0625
+      delta_t: 0.35
+
+image_or_video_shape:
+- 1
+- 96
+- 48
+- 44                                 # 720p: 44*16=704 (H)
+- 80                                 # 720p: 80*16=1280 (W)
+load_raw_video: true
+independent_first_frame: false
+
+negative_prompt: '色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走'
