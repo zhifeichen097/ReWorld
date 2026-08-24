@@ -14,6 +14,13 @@
   <a href="LICENSE.md"><img src="https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-8A8F98" alt="License: CC BY-NC-SA 4.0"></a>
 </p>
 
+<br>
+
+<a href="assets/demo/reworld_demo.mp4">
+  <img src="assets/demo/reworld_demo_preview.gif" alt="ReWorld demo reel — click for the full video" width="100%">
+</a>
+<sub><i>▶ Click the preview for the full 70-second demo reel.</i></sub>
+
 </div>
 
 ---
