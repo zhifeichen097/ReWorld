@@ -774,7 +774,7 @@ def get_new_camera_from_keyboard(
     Returns:
         poses: (chunk_size, 4, 4) camera c2w sequence
         mouse_actions: list[str], length chunk_size, per-frame mouse key (e.g. 'i','k','j','l','u')
-        keyboard_actions: list[str], length chunk_size, per-frame keyboard key (e.g. 'w','s','a','d','space','ctrl','q')
+        keyboard_actions: list[str], length chunk_size, per-frame keyboard key ('w','s','a','d', or 'q' for no translation)
     """
     MOUSE_IDX = {
         "i":  [delta_r, 0],
@@ -788,8 +788,6 @@ def get_new_camera_from_keyboard(
         "s": [0, 0, -delta_t], 
         "a": [-delta_t, 0, 0], 
         "d": [delta_t, 0, 0],
-        "space": [0, -delta_t, 0],
-        "ctrl": [0, delta_t, 0],
         "q":  [0, 0, 0],
     }
     flag = 0
@@ -949,7 +947,7 @@ def generate_constant_action_sequence(
     )
 
 
-_KEYBOARD_KEYS = {"w", "s", "a", "d", "space", "ctrl", "q"}
+_KEYBOARD_KEYS = {"w", "s", "a", "d", "q"}
 _MOUSE_KEYS = {"i", "k", "j", "l", "u"}
 
 
@@ -957,7 +955,7 @@ def parse_key_sequence(raw_seq: str, num_frames: int, block_size: int = 4):
     """Parse a user key string into (mouse_sequence, keyboard_sequence).
 
     Each character corresponds to one **block** (block_size latent frames share the same key):
-        - WASD / space / ctrl -> keyboard action, mouse defaults to 'u'
+        - WASD -> keyboard action, mouse defaults to 'u'
         - IJKL               -> mouse action, keyboard defaults to 'q'
         - Q / U              -> stationary (keyboard='q', mouse='u')
 
@@ -1014,8 +1012,6 @@ def generate_action_sequence_from_keys(
         "s": [0, 0, -delta_t],
         "a": [-delta_t, 0, 0],
         "d": [delta_t, 0, 0],
-        "space": [0, -delta_t, 0],
-        "ctrl": [0, delta_t, 0],
         "q": [0, 0, 0],
     }
 
@@ -1053,8 +1049,7 @@ def generate_action_sequence_from_keys(
 
 # ---- MULTI-KEY (simultaneous) composite-pose builder ---------------------------
 # Unit deltas (scaled by delta_t / delta_r below). Same axes as KEYBOARD_IDX/MOUSE_IDX.
-_KEYBOARD_UNIT = {"w": [0, 0, 1], "s": [0, 0, -1], "a": [-1, 0, 0], "d": [1, 0, 0],
-                  "space": [0, -1, 0], "ctrl": [0, 1, 0]}
+_KEYBOARD_UNIT = {"w": [0, 0, 1], "s": [0, 0, -1], "a": [-1, 0, 0], "d": [1, 0, 0]}
 _MOUSE_UNIT = {"i": [1, 0], "k": [-1, 0], "j": [0, -1], "l": [0, 1]}  # [pitch, yaw]
 
 
