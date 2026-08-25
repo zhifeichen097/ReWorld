@@ -9,7 +9,7 @@
 
 <p>
   <a href="https://zhifeichen097.github.io/ReWorld/"><img src="https://img.shields.io/badge/Project%20Page-ReWorld-4A90D9?logo=googlechrome&logoColor=white" alt="Project Page"></a>
-  <img src="https://img.shields.io/badge/Paper-Coming%20Soon-B31B1B?logo=arxiv&logoColor=white" alt="Paper (coming soon)">
+  <a href="https://arxiv.org/abs/2608.23565"><img src="https://img.shields.io/badge/Paper-arXiv%3A2608.23565-B31B1B?logo=arxiv&logoColor=white" alt="Paper on arXiv"></a>
   <a href="https://huggingface.co/"><img src="https://img.shields.io/badge/Checkpoints-Coming%20Soon-FFD21E?logo=huggingface&logoColor=black" alt="Checkpoints coming soon"></a>
   <a href="LICENSE.md"><img src="https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-8A8F98" alt="License: CC BY-NC-SA 4.0"></a>
 </p>
@@ -31,7 +31,8 @@ ReWorld is an interactive world model: you drive the camera with keyboard-and-mo
 
 ## News
 
-- **2026-08** — Inference code released. Paper and pretrained checkpoints are on the way — see [Checkpoints](#checkpoints).
+- **2026-08** — Paper released on arXiv: [ReWorld: An Interactive World Model with Long-Horizon Memory](https://arxiv.org/abs/2608.23565).
+- **2026-08** — Inference code released. Pretrained checkpoints are on the way — see [Checkpoints](#checkpoints).
 
 ## Installation
 
@@ -168,6 +169,7 @@ If you find ReWorld useful, please cite:
   author  = {Chen, Zhifei and Wang, Luozhou and Shen, Guibao and Yan, Dongyu and
              Yang, Shuai and Xu, Tianshuo and Du, Yihua and Wang, Wei and
              Gui, Tianyi and Huang, Lianghua and Chen, Yingcong},
+  journal = {arXiv preprint arXiv:2608.23565},
   year    = {2026}
 }
 ```
