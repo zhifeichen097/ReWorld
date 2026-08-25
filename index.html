@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ReWorld — the world remembers</title>
+<meta name="description" content="ReWorld: a real-time interactive world model with long-horizon memory. Explore, leave, return — the world remembers.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<nav class="nav" id="nav" aria-label="Main">
+  <a class="nav-logo" href="#hero" aria-label="ReWorld home">
+    <img src="assets/logo_dark.png" alt="ReWorld logo">
+  </a>
+  <span class="nav-spacer"></span>
+  <div class="nav-links">
+    <a href="#method">Method</a>
+    <a href="#memory">Memory</a>
+    <a href="#control">Control</a>
+    <a href="#scale">Scale</a>
+    <a href="#horizon">Horizon</a>
+    <a class="btn-paper" href="https://arxiv.org/abs/2608.23565" target="_blank" rel="noopener" aria-label="Read the paper on arXiv">Paper</a>
+  </div>
+</nav>
+
+<header class="hero" id="hero">
+  <div class="hero-media" id="heroMedia">
+    <video id="heroVideo" muted loop playsinline autoplay preload="auto"
+      poster="videos/hero_loop.jpg" src="videos/hero_loop.mp4" aria-hidden="true"></video>
+  </div>
+  <div class="hero-shade" aria-hidden="true"></div>
+  <div class="hero-dim" aria-hidden="true"></div>
+  <div class="hero-inner" id="heroInner">
+    <h1 class="hero-title"><span class="re">Re</span>World</h1>
+    <p class="hero-tagline">Explore, leave, return — the world remembers.</p>
+    <p class="hero-sub">A real-time interactive world model with long-horizon memory</p>
+    <div class="hero-chips" aria-label="Highlights">
+      <span>Real-time interactive</span>
+      <span>704&times;1280 streaming</span>
+      <span>Long-horizon memory</span>
+    </div>
+  </div>
+  <div class="scroll-cue" id="scrollCue" aria-hidden="true">
+    <span>Scroll</span>
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor"
+      stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 7 L9 12 L14 7"/>
+    </svg>
+  </div>
+</header>
+
+<main class="content">
+
+  <section id="method">
+    <div class="section-head reveal">
+      <span class="eyebrow">Method</span>
+      <h2>How it works</h2>
+      <p class="lede">One streaming diffusion backbone, trained so that control and memory
+        stop fighting over the same context window.</p>
+    </div>
+    <figure class="method-figure reveal">
+      <div class="fig-scroll" id="figScroll">
+        <img src="assets/wanworld_framework_dark.png" loading="lazy"
+          alt="ReWorld framework diagram: window-split training with head routing, an odometer-admitted landmark memory bank with pose retrieval, and a distilled real-time streaming decoder.">
+      </div>
+      <div class="fig-hint" id="figHint" aria-hidden="true">
+        <span>scroll</span>
+        <svg width="15" height="15" viewBox="0 0 18 18" fill="none" stroke="currentColor"
+          stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9 h11 M10 4.5 L14.5 9 L10 13.5"/>
+        </svg>
+      </div>
+      <figcaption>The ReWorld framework — split training windows, routed attention heads, and a bounded landmark memory queried by camera pose.</figcaption>
+    </figure>
+    <div class="method-cards">
+      <div class="mcard reveal">
+        <span class="num">1</span>
+        <h3>Window-split training</h3>
+        <p><strong>Control learns under short windows, memory under long ones.</strong>
+          Per-step head routing decides which attention heads see the distant past,
+          so precise action-following and long-range recall are trained without
+          compromising each other.</p>
+      </div>
+      <div class="mcard reveal">
+        <span class="num">2</span>
+        <h3>Bounded memory</h3>
+        <p><strong>An odometer-admitted landmark bank with pose retrieval.</strong>
+          Views are admitted as landmarks by traveled distance and retrieved by camera pose
+          under a fixed KV budget — memory stays flat no matter how far you roam.</p>
+      </div>
+      <div class="mcard reveal">
+        <span class="num">3</span>
+        <h3>Real-time streaming</h3>
+        <p><strong>Metric-aligned multi-source data, then 4-step distillation.</strong>
+          Trajectories from many sources are aligned to a common metric scale, and the
+          distilled model streams interactive 704&times;1280 video in real time.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="memory">
+    <div class="section-head reveal">
+      <span class="eyebrow">Long-horizon memory</span>
+      <h2>The world remembers</h2>
+      <p class="lede">Leave and come back — <em>the scene is still there.</em>
+        Twenty-four 16-second journeys: each clip roams away from its opening view, and the
+        badged ones navigate all the way back. Hover any card for its generation prompt;
+        the corner button opens it full-size.</p>
+    </div>
+    <div class="wall">
+      <figure class="vcard reveal"
+        data-video="videos/mem_crystal_depths.mp4" data-title="Crystal Depths" data-note="Dolly deep into the glowing cavern and back to the same crystal-lined entrance." data-prompt="The camera advances between crystals, crosses a narrow bridge, and descends into a glowing chamber; reflections shift and particles drift. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_crystal_depths.jpg" src="videos/mem_crystal_depths.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera advances between crystals, crosses a narrow bridge, and descends into a glowing chamber; reflections shift and particles drift. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="badge-return" aria-hidden="true">start&thinsp;&#8652;&thinsp;return</span>
+        <button class="expand-btn" type="button" aria-label="Expand Crystal Depths"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Crystal Depths</span>
+          <span class="motion">dolly</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_portal_complex.mp4" data-title="Portal Complex" data-note="Blue-vs-fire portals hold their ground through the strafe and return." data-prompt="The camera approaches one portal, circles its rings, and passes smoothly into a new valley; surfaces ripple, stones rotate, and lighting changes coherently. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_portal_complex.jpg" src="videos/mem_portal_complex.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera approaches one portal, circles its rings, and passes smoothly into a new valley; surfaces ripple, stones rotate, and lighting changes coherently. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="badge-return" aria-hidden="true">start&thinsp;&#8652;&thinsp;return</span>
+        <button class="expand-btn" type="button" aria-label="Expand Portal Complex"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Portal Complex</span>
+          <span class="motion">strafe</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_silver_ruins.mp4" data-title="Silver Ruins" data-note="Beneath moonlit arches and around the reflecting pool — mist moves, the ruins do not." data-prompt="The camera moves beneath arches, circles a reflecting pool, and enters the doorway; mist flows and moonlit banners flutter. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_silver_ruins.jpg" src="videos/mem_silver_ruins.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera moves beneath arches, circles a reflecting pool, and enters the doorway; mist flows and moonlit banners flutter. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <button class="expand-btn" type="button" aria-label="Expand Silver Ruins"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Silver Ruins</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_turtle_realm.mp4" data-title="Turtle Realm" data-note="A garden city on a sky-turtle keeps its identity at the return." data-prompt="The camera follows a garden path, crosses a small bridge, and climbs toward a lookout; the turtle glides and waterfalls trail into mist. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_turtle_realm.jpg" src="videos/mem_turtle_realm.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera follows a garden path, crosses a small bridge, and climbs toward a lookout; the turtle glides and waterfalls trail into mist. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="badge-return" aria-hidden="true">start&thinsp;&#8652;&thinsp;return</span>
+        <button class="expand-btn" type="button" aria-label="Expand Turtle Realm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Turtle Realm</span>
+          <span class="motion">dolly</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_aurora_fortress.mp4" data-title="Aurora Fortress" data-note="Lantern bridge and ice castle reproduced closely under the aurora." data-prompt="The camera crosses the bridge, enters the gate, and turns into a vast courtyard; auroras flow, snow streams, and doors open. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_aurora_fortress.jpg" src="videos/mem_aurora_fortress.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera crosses the bridge, enters the gate, and turns into a vast courtyard; auroras flow, snow streams, and doors open. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="badge-return" aria-hidden="true">start&thinsp;&#8652;&thinsp;return</span>
+        <button class="expand-btn" type="button" aria-label="Expand Aurora Fortress"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Aurora Fortress</span>
+          <span class="motion">dolly</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_robot_factory.mp4" data-title="Robot Factory" data-note="Robots return to the same conveyor positions in the candy-colored hall." data-prompt="The camera moves alongside a conveyor, turns beneath rotating gears, and enters a robot-testing plaza; machines cycle and small robots walk past. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_robot_factory.jpg" src="videos/mem_robot_factory.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera moves alongside a conveyor, turns beneath rotating gears, and enters a robot-testing plaza; machines cycle and small robots walk past. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="badge-return" aria-hidden="true">start&thinsp;&#8652;&thinsp;return</span>
+        <button class="expand-btn" type="button" aria-label="Expand Robot Factory"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Robot Factory</span>
+          <span class="motion">dolly</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_bear_conductor.mp4" data-title="Bear Conductor" data-note="Third person — pan away to the station, return to the exact bear-and-train framing." data-prompt="The bear climbs aboard as the train begins moving and the camera tracks along the platform. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_bear_conductor.jpg" src="videos/mem_bear_conductor.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The bear climbs aboard as the train begins moving and the camera tracks along the platform. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="badge-return" aria-hidden="true">start&thinsp;&#8652;&thinsp;return</span>
+        <button class="expand-btn" type="button" aria-label="Expand Bear Conductor"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Bear Conductor</span>
+          <span class="motion">yaw</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_frog_explorer.mp4" data-title="Frog Explorer" data-note="Third person — out and back across the lily-pad city, scene intact." data-prompt="The frog travels from pad to pad while the camera tracks, water ripples and reeds sway. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_frog_explorer.jpg" src="videos/mem_frog_explorer.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The frog travels from pad to pad while the camera tracks, water ripples and reeds sway. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="badge-return" aria-hidden="true">start&thinsp;&#8652;&thinsp;return</span>
+        <button class="expand-btn" type="button" aria-label="Expand Frog Explorer"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Frog Explorer</span>
+          <span class="motion">dolly</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_station_traveler.mp4" data-title="Station Traveler" data-note="Third person — benches, train and pillars all match at the return." data-prompt="The traveler continues down the platform while a train glides in and the camera tracks backward smoothly. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_station_traveler.jpg" src="videos/mem_station_traveler.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The traveler continues down the platform while a train glides in and the camera tracks backward smoothly. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="badge-return" aria-hidden="true">start&thinsp;&#8652;&thinsp;return</span>
+        <button class="expand-btn" type="button" aria-label="Expand Station Traveler"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Station Traveler</span>
+          <span class="motion">dolly</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_cathedral_nave.mp4" data-title="Cathedral Nave" data-note="Down the nave, around a column and into a side chapel — colored light sweeping stone that never wavers." data-prompt="The camera advances down the nave, arcs around a column, and enters a side chapel; colored light moves over the floor and hanging lamps sway slightly. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_cathedral_nave.jpg" src="videos/mem_cathedral_nave.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera advances down the nave, arcs around a column, and enters a side chapel; colored light moves over the floor and hanging lamps sway slightly. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <button class="expand-btn" type="button" aria-label="Expand Cathedral Nave"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Cathedral Nave</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_coral_reef.mp4" data-title="Coral Reef" data-note="Strafe out across the reef and back — fish scatter, but the coral arch is right where it was." data-prompt="The camera swims forward through a coral arch, descends into a channel, and turns toward open water; fish scatter and regroup, plants wave, and bubbles rise. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_coral_reef.jpg" src="videos/mem_coral_reef.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera swims forward through a coral arch, descends into a channel, and turns toward open water; fish scatter and regroup, plants wave, and bubbles rise. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="badge-return" aria-hidden="true">start&thinsp;&#8652;&thinsp;return</span>
+        <button class="expand-btn" type="button" aria-label="Expand Coral Reef"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Coral Reef</span>
+          <span class="motion">strafe</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_miniature_railway.mp4" data-title="Miniature Railway" data-note="Out along the toy tracks, through the tunnel, and back to the same village view." data-prompt="The camera advances along the tracks, enters a tunnel, and emerges beside a toy village; trees and houses pass, steam puffs, and windmills rotate. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_miniature_railway.jpg" src="videos/mem_miniature_railway.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera advances along the tracks, enters a tunnel, and emerges beside a toy village; trees and houses pass, steam puffs, and windmills rotate. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="badge-return" aria-hidden="true">start&thinsp;&#8652;&thinsp;return</span>
+        <button class="expand-btn" type="button" aria-label="Expand Miniature Railway"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Miniature Railway</span>
+          <span class="motion">L-return</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_noodle_street.mp4" data-title="Noodle Street" data-note="Zigzag through the steam-filled lantern lane — diners, signage and stalls stay coherent." data-prompt="The camera travels along the street, turns down a steam-filled lane, and enters a plaza; diners move, steam curls, and lanterns sway. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_noodle_street.jpg" src="videos/mem_noodle_street.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera travels along the street, turns down a steam-filled lane, and enters a plaza; diners move, steam curls, and lanterns sway. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <button class="expand-btn" type="button" aria-label="Expand Noodle Street"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Noodle Street</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_storybook_lakeside.mp4" data-title="Storybook Lakeside" data-note="A sharp turn along the shore and over the bridge — reeds, boats and island all hold their place." data-prompt="The camera travels along the shore, crosses a bridge, and circles an island; water ripples, reeds sway, and boats drift. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_storybook_lakeside.jpg" src="videos/mem_storybook_lakeside.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera travels along the shore, crosses a bridge, and circles an island; water ripples, reeds sway, and boats drift. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <button class="expand-btn" type="button" aria-label="Expand Storybook Lakeside"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Storybook Lakeside</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_treasure_caves.mp4" data-title="Treasure Caves" data-note="An S-curve through the cave to a glittering lagoon chamber — torchlit geometry stays consistent." data-prompt="The camera moves through the cave, crosses a rope bridge, and enters a glittering lagoon chamber; water moves, torches flicker, and parrots fly. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_treasure_caves.jpg" src="videos/mem_treasure_caves.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera moves through the cave, crosses a rope bridge, and enters a glittering lagoon chamber; water moves, torches flicker, and parrots fly. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <button class="expand-btn" type="button" aria-label="Expand Treasure Caves"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Treasure Caves</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_elven_city.mp4" data-title="Elven City" data-note="Yaw across the treetop market and back — the branch bridge and lantern plaza reappear exactly." data-prompt="The camera moves through the market, crosses a branch bridge, and enters a lantern plaza; crowds stroll, silk canopies ripple, and lights drift. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_elven_city.jpg" src="videos/mem_elven_city.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera moves through the market, crosses a branch bridge, and enters a lantern plaza; crowds stroll, silk canopies ripple, and lights drift. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="badge-return" aria-hidden="true">start&thinsp;&#8652;&thinsp;return</span>
+        <button class="expand-btn" type="button" aria-label="Expand Elven City"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Elven City</span>
+          <span class="motion">yaw</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_stone_castle.mp4" data-title="Stone Castle" data-note="Through torchlit halls and arched galleries — stonework, hanging rugs and daylight doorways stay put." data-prompt="The camera travels through the great hall, turns through an arch, and enters the courtyard; banners sway, distant visitors walk, and sunlight shifts across stone. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_stone_castle.jpg" src="videos/mem_stone_castle.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera travels through the great hall, turns through an arch, and enters the courtyard; banners sway, distant visitors walk, and sunlight shifts across stone. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <button class="expand-btn" type="button" aria-label="Expand Stone Castle"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Stone Castle</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_pixel_labyrinth.mp4" data-title="Pixel Labyrinth" data-note="Through a torchlit maze of gates and glowing crystals — every corridor stays exactly where it was." data-prompt="The camera advances through corridors, turns twice, and enters a treasure chamber; torches animate, gates rise, and dust pixels drift. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_pixel_labyrinth.jpg" src="videos/mem_pixel_labyrinth.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera advances through corridors, turns twice, and enters a treasure chamber; torches animate, gates rise, and dust pixels drift. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <button class="expand-btn" type="button" aria-label="Expand Pixel Labyrinth"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Pixel Labyrinth</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_cloud_boulevard_walk.mp4" data-title="Cloud Boulevard Walk" data-note="A stroll through the cloud city — up to open sky, down over palm terraces, and the boulevard is still there." data-prompt="The camera glides down a cloud boulevard, crosses a bridge, and rises toward an island plaza; vapor curls and islands drift. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_cloud_boulevard_walk.jpg" src="videos/mem_cloud_boulevard_walk.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera glides down a cloud boulevard, crosses a bridge, and rises toward an island plaza; vapor curls and islands drift. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <button class="expand-btn" type="button" aria-label="Expand Cloud Boulevard Walk"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Cloud Boulevard Walk</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_alchemy_tower.mp4" data-title="Alchemy Tower" data-note="Ramps and bridges past glowing alembic orbs — the tower&#x27;s brass-and-stone architecture keeps its logic." data-prompt="The camera moves around a central apparatus, ascends a ramp, and enters a greenhouse lab; liquids swirl, gears turn, and vapor drifts. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_alchemy_tower.jpg" src="videos/mem_alchemy_tower.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera moves around a central apparatus, ascends a ramp, and enters a greenhouse lab; liquids swirl, gears turn, and vapor drifts. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <button class="expand-btn" type="button" aria-label="Expand Alchemy Tower"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Alchemy Tower</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_clockwork_park.mp4" data-title="Clockwork Park" data-note="Gears, fountains and flowers — all exactly where you left them." data-prompt="The camera follows a rotating path, turns through opening metal petals, and reaches a fountain; gears rotate and water pulses rhythmically. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_clockwork_park.jpg" src="videos/mem_clockwork_park.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera follows a rotating path, turns through opening metal petals, and reaches a fountain; gears rotate and water pulses rhythmically. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="badge-return" aria-hidden="true">start&thinsp;&#8652;&thinsp;return</span>
+        <button class="expand-btn" type="button" aria-label="Expand Clockwork Park"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Clockwork Park</span>
+          <span class="motion">dolly</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_fairy_flight.mp4" data-title="Fairy Flight" data-note="Third person — the same pink-and-purple flower framing at start and end." data-prompt="The fairy loops between blossoms while the camera follows and petals sway. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_fairy_flight.jpg" src="videos/mem_fairy_flight.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The fairy loops between blossoms while the camera follows and petals sway. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="badge-return" aria-hidden="true">start&thinsp;&#8652;&thinsp;return</span>
+        <button class="expand-btn" type="button" aria-label="Expand Fairy Flight"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Fairy Flight</span>
+          <span class="motion">dolly</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_mars_exploration_rover.mp4" data-title="Mars Exploration Rover" data-note="Third person — the rover carves a gentle S toward the crater rim, dust trail and terrain persistent." data-prompt="The single controlled mars rover rolls straight toward the crater rim with believable wheel articulation and a faint twin dust trace. Keep the subject centered on the image centerline and initially aimed at the exact central vanishing point. Preserve its identity, shape, color, scale, and the environment geometry with smooth temporal coherence and plausible physics. No cuts, camera jumps, lateral heading at the start, new subjects, extra vehicles, text, or sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_mars_exploration_rover.jpg" src="videos/mem_mars_exploration_rover.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The single controlled mars rover rolls straight toward the crater rim with believable wheel articulation and a faint twin dust trace. Keep the subject centered on the image centerline and initially aimed at the exact central vanishing point. Preserve its identity, shape, color, scale, and the environment geometry with smooth temporal coherence and plausible physics. No cuts, camera jumps, lateral heading at the start, new subjects, extra vehicles, text, or sudden transformations.</p></div>
+        <button class="expand-btn" type="button" aria-label="Expand Mars Exploration Rover"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Mars Exploration Rover</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/mem_alien_saltflat_hovercraft.mp4" data-title="Alien Saltflat Hovercraft" data-note="Third person — the hovercraft glides its S across the salt flat, horizon and haze coherent." data-prompt="The single controlled hovercraft glides straight across the salt flat at constant height with a subtle ground-hugging haze. Keep the subject centered on the image centerline and initially aimed at the exact central vanishing point. Preserve its identity, shape, color, scale, and the environment geometry with smooth temporal coherence and plausible physics. No cuts, camera jumps, lateral heading at the start, new subjects, extra vehicles, text, or sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/mem_alien_saltflat_hovercraft.jpg" src="videos/mem_alien_saltflat_hovercraft.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The single controlled hovercraft glides straight across the salt flat at constant height with a subtle ground-hugging haze. Keep the subject centered on the image centerline and initially aimed at the exact central vanishing point. Preserve its identity, shape, color, scale, and the environment geometry with smooth temporal coherence and plausible physics. No cuts, camera jumps, lateral heading at the start, new subjects, extra vehicles, text, or sudden transformations.</p></div>
+        <button class="expand-btn" type="button" aria-label="Expand Alien Saltflat Hovercraft"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Alien Saltflat Hovercraft</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="control">
+    <div class="section-head reveal">
+      <span class="eyebrow">Camera control</span>
+      <h2>Follow any camera intent</h2>
+      <p class="lede">Twelve clips driven by live key input — the exact sequence is shown in the
+        on-screen HUD — while the scene stays coherent, in first person and third.</p>
+    </div>
+    <div class="wall wall-ctrl">
+      <figure class="vcard reveal"
+        data-video="videos/ctrl_floating_isles.mp4" data-title="Floating Isles" data-note="Zigzag across sky bridges between drifting islands — waterfalls pour into the clouds below." data-prompt="The camera advances across a bridge, turns around an island garden, and rises toward a temple; islands drift and waterfalls fall into clouds. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/ctrl_floating_isles.jpg" src="videos/ctrl_floating_isles.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera advances across a bridge, turns around an island garden, and rises toward a temple; islands drift and waterfalls fall into clouds. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="traj-chip" aria-hidden="true">FPV</span>
+        <button class="expand-btn" type="button" aria-label="Expand Floating Isles"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Floating Isles</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/ctrl_alpine_snowfield.mp4" data-title="Alpine Snowfield" data-note="Wind-shaped snow toward the mountain pass — crisp, stable geometry at full speed." data-prompt="The world matches the initial scene: An open alpine snowfield toward a mountain pass, wind-shaped snow and a clear route ahead. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: fine powder blows across the surface, clouds drift, and distant shadows slide over the mountains; fine snow or ice crystals drift in the wind, broad shadows move across the cold surfaces, and pale atmospheric haze changes gradually. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/ctrl_alpine_snowfield.jpg" src="videos/ctrl_alpine_snowfield.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The world matches the initial scene: An open alpine snowfield toward a mountain pass, wind-shaped snow and a clear route ahead. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: fine powder blows across the surface, clouds drift, and distant shadows slide over the mountains; fine snow or ice crystals drift in the wind, broad shadows move across the cold surfaces, and pale atmospheric haze changes gradually. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.</p></div>
+        <span class="traj-chip" aria-hidden="true">FPV</span>
+        <button class="expand-btn" type="button" aria-label="Expand Alpine Snowfield"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Alpine Snowfield</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/ctrl_watercolor_port.mp4" data-title="Watercolor Port" data-note="Washed-color harbor streets and hillside stairs answer every key press." data-prompt="The world matches the initial scene: A seaside village with washed-color streets, harbor paths and hillside stairs. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: boats bob, laundry sways, and watercolor clouds drift; water ripples and flows continuously, reflected highlights travel across the surface, and small splashes or spray disperse with natural weight; distant lights and reflections change subtly, suspended signs or awnings move where exposed to air, and atmospheric haze shifts between the larger structures. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/ctrl_watercolor_port.jpg" src="videos/ctrl_watercolor_port.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The world matches the initial scene: A seaside village with washed-color streets, harbor paths and hillside stairs. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: boats bob, laundry sways, and watercolor clouds drift; water ripples and flows continuously, reflected highlights travel across the surface, and small splashes or spray disperse with natural weight; distant lights and reflections change subtly, suspended signs or awnings move where exposed to air, and atmospheric haze shifts between the larger structures. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.</p></div>
+        <span class="traj-chip" aria-hidden="true">FPV</span>
+        <button class="expand-btn" type="button" aria-label="Expand Watercolor Port"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Watercolor Port</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/ctrl_cloud_boulevard.mp4" data-title="Cloud Boulevard" data-note="Soft walkways and sky bridges of a floating cloud city, steady through the turns." data-prompt="The world matches the initial scene: A floating cloud city with soft walkways, sky bridges and drifting islands. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: vapor curls and islands drift; distant lights and reflections change subtly, suspended signs or awnings move where exposed to air, and atmospheric haze shifts between the larger structures; cloud layers drift at different depths, soft vapor changes shape, and sunlight travels gradually across the open environment. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/ctrl_cloud_boulevard.jpg" src="videos/ctrl_cloud_boulevard.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The world matches the initial scene: A floating cloud city with soft walkways, sky bridges and drifting islands. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: vapor curls and islands drift; distant lights and reflections change subtly, suspended signs or awnings move where exposed to air, and atmospheric haze shifts between the larger structures; cloud layers drift at different depths, soft vapor changes shape, and sunlight travels gradually across the open environment. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.</p></div>
+        <span class="traj-chip" aria-hidden="true">FPV</span>
+        <button class="expand-btn" type="button" aria-label="Expand Cloud Boulevard"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Cloud Boulevard</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/ctrl_submarine_city.mp4" data-title="Submarine City" data-note="Round windows and glowing tunnels — the deep-sea avenues stay coherent." data-prompt="The world matches the initial scene: A submarine city of round windows, glowing tunnels and deep-sea avenues. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: submarines pass, jellyfish pulse, and searchlights sweep; currents move suspended particles and flexible plants, bubbles rise at varied speeds, and caustic light shifts across nearby surfaces; water ripples and flows continuously, reflected highlights travel across the surface, and small splashes or spray disperse with natural weight. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/ctrl_submarine_city.jpg" src="videos/ctrl_submarine_city.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The world matches the initial scene: A submarine city of round windows, glowing tunnels and deep-sea avenues. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: submarines pass, jellyfish pulse, and searchlights sweep; currents move suspended particles and flexible plants, bubbles rise at varied speeds, and caustic light shifts across nearby surfaces; water ripples and flows continuously, reflected highlights travel across the surface, and small splashes or spray disperse with natural weight. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.</p></div>
+        <span class="traj-chip" aria-hidden="true">FPV</span>
+        <button class="expand-btn" type="button" aria-label="Expand Submarine City"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Submarine City</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/ctrl_balloon_archipelago.mp4" data-title="Balloon Archipelago" data-note="Drifting through a sky archipelago of balloons, floating farms and cloud gates." data-prompt="The world matches the initial scene: Drifting through a sky archipelago filled with balloons, floating farms and cloud gates. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: ropes sway and fields rotate below; cloud layers drift at different depths, soft vapor changes shape, and sunlight travels gradually across the open environment. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/ctrl_balloon_archipelago.jpg" src="videos/ctrl_balloon_archipelago.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The world matches the initial scene: Drifting through a sky archipelago filled with balloons, floating farms and cloud gates. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: ropes sway and fields rotate below; cloud layers drift at different depths, soft vapor changes shape, and sunlight travels gradually across the open environment. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.</p></div>
+        <span class="traj-chip" aria-hidden="true">FPV</span>
+        <button class="expand-btn" type="button" aria-label="Expand Balloon Archipelago"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Balloon Archipelago</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/ctrl_owl_librarian.mp4" data-title="Owl Librarian" data-note="An owl glides through a library city of shelves, bridges and towers." data-prompt="The world matches the initial scene: An owl flying through a vast library city of shelves, bridges and towers. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: the owl flies between shelf towers with rhythmic wingbeats, loose pages flutter in the air, rolling ladders shift slowly along their rails, and warm reading lights pulse across the bridges. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/ctrl_owl_librarian.jpg" src="videos/ctrl_owl_librarian.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The world matches the initial scene: An owl flying through a vast library city of shelves, bridges and towers. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: the owl flies between shelf towers with rhythmic wingbeats, loose pages flutter in the air, rolling ladders shift slowly along their rails, and warm reading lights pulse across the bridges. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.</p></div>
+        <span class="traj-chip" aria-hidden="true">THIRD-PERSON</span>
+        <button class="expand-btn" type="button" aria-label="Expand Owl Librarian"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Owl Librarian</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/ctrl_desert_rally_truck.mp4" data-title="Desert Rally Truck" data-note="The rally truck holds its line across the desert track — mesas and dust trace persist." data-prompt="The world matches the initial scene: A single unbranded sand-colored rally truck on a broad compacted desert track, two simple distant mesas, warm late-afternoon light, and only a faint settled dust trace. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: fine dust streams behind the tires, heat haze shimmers above the track, loose sand curls across the route, and distant clouds move slowly over the mesas. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/ctrl_desert_rally_truck.jpg" src="videos/ctrl_desert_rally_truck.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The world matches the initial scene: A single unbranded sand-colored rally truck on a broad compacted desert track, two simple distant mesas, warm late-afternoon light, and only a faint settled dust trace. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: fine dust streams behind the tires, heat haze shimmers above the track, loose sand curls across the route, and distant clouds move slowly over the mesas. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.</p></div>
+        <span class="traj-chip" aria-hidden="true">THIRD-PERSON</span>
+        <button class="expand-btn" type="button" aria-label="Expand Desert Rally Truck"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Desert Rally Truck</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/ctrl_lunar_pressurized_buggy.mp4" data-title="Lunar Pressurized Buggy" data-note="A pressurized buggy crosses the gray basin under a huge blue planet — clean tracking." data-prompt="The world matches the initial scene: A single compact pressurized lunar buggy crossing a smooth gray basin, a large blue planet low above the central horizon, sparse boulders, and black space. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: powdery regolith lifts in slow ballistic arcs behind the wheels, small suspension movements follow the uneven ground, and sunlight glides across the buggy&#x27;s broad panels. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/ctrl_lunar_pressurized_buggy.jpg" src="videos/ctrl_lunar_pressurized_buggy.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The world matches the initial scene: A single compact pressurized lunar buggy crossing a smooth gray basin, a large blue planet low above the central horizon, sparse boulders, and black space. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: powdery regolith lifts in slow ballistic arcs behind the wheels, small suspension movements follow the uneven ground, and sunlight glides across the buggy&#x27;s broad panels. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.</p></div>
+        <span class="traj-chip" aria-hidden="true">THIRD-PERSON</span>
+        <button class="expand-btn" type="button" aria-label="Expand Lunar Pressurized Buggy"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Lunar Pressurized Buggy</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/ctrl_solarpunk_evtol.mp4" data-title="Solarpunk eVTOL" data-note="An electric aircraft over white terraces, green roofs and energy towers, obeying every key." data-prompt="The world matches the initial scene: A single elegant electric aircraft flies above a solarpunk garden city of white terraces, green roofs, and slender energy towers. The established spatial layout, principal forms, material palette, lighting, and identity of the single main subject remain recognizable throughout. Independent environmental motion keeps the world active: balanced rotors turn in synchronization, tree canopies ripple, water terraces sparkle, and soft energy patterns move along the distant towers. These subject-compatible background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, extra subjects, readable text, abrupt transformations, or discontinuous changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/ctrl_solarpunk_evtol.jpg" src="videos/ctrl_solarpunk_evtol.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The world matches the initial scene: A single elegant electric aircraft flies above a solarpunk garden city of white terraces, green roofs, and slender energy towers. The established spatial layout, principal forms, material palette, lighting, and identity of the single main subject remain recognizable throughout. Independent environmental motion keeps the world active: balanced rotors turn in synchronization, tree canopies ripple, water terraces sparkle, and soft energy patterns move along the distant towers. These subject-compatible background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, extra subjects, readable text, abrupt transformations, or discontinuous changes.</p></div>
+        <span class="traj-chip" aria-hidden="true">THIRD-PERSON</span>
+        <button class="expand-btn" type="button" aria-label="Expand Solarpunk eVTOL"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Solarpunk eVTOL</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/ctrl_floating_city_catamaran.mp4" data-title="Floating City Catamaran" data-note="A silver catamaran cuts across bright water toward the floating city&#x27;s white towers." data-prompt="The world matches the initial scene: A single silver catamaran sails across a bright ocean toward a floating city of white towers, hanging gardens, and cascading water. The established spatial layout, principal forms, material palette, lighting, and identity of the single main subject remain recognizable throughout. Independent environmental motion keeps the world active: twin wakes widen behind the hulls, sail membranes flex, waterfalls descend from the city, and sunlight glitters across rolling water. These subject-compatible background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, extra subjects, readable text, abrupt transformations, or discontinuous changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/ctrl_floating_city_catamaran.jpg" src="videos/ctrl_floating_city_catamaran.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The world matches the initial scene: A single silver catamaran sails across a bright ocean toward a floating city of white towers, hanging gardens, and cascading water. The established spatial layout, principal forms, material palette, lighting, and identity of the single main subject remain recognizable throughout. Independent environmental motion keeps the world active: twin wakes widen behind the hulls, sail membranes flex, waterfalls descend from the city, and sunlight glitters across rolling water. These subject-compatible background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, extra subjects, readable text, abrupt transformations, or discontinuous changes.</p></div>
+        <span class="traj-chip" aria-hidden="true">THIRD-PERSON</span>
+        <button class="expand-btn" type="button" aria-label="Expand Floating City Catamaran"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Floating City Catamaran</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/ctrl_asteroid_ring_tug.mp4" data-title="Asteroid Ring Tug" data-note="A mining tug threads the asteroid field toward the colossal illuminated orbital ring." data-prompt="The world matches the initial scene: A single elegant mining tug travels through a sparse asteroid field toward a colossal illuminated orbital ring. The established spatial layout, principal forms, material palette, lighting, and identity of the single main subject remain recognizable throughout. Independent environmental motion keeps the world active: small attitude thrusters pulse, faint exhaust disperses, distant rocks rotate slowly, and moving ring lights reflect across the tug&#x27;s metallic shell. These subject-compatible background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, extra subjects, readable text, abrupt transformations, or discontinuous changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/ctrl_asteroid_ring_tug.jpg" src="videos/ctrl_asteroid_ring_tug.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The world matches the initial scene: A single elegant mining tug travels through a sparse asteroid field toward a colossal illuminated orbital ring. The established spatial layout, principal forms, material palette, lighting, and identity of the single main subject remain recognizable throughout. Independent environmental motion keeps the world active: small attitude thrusters pulse, faint exhaust disperses, distant rocks rotate slowly, and moving ring lights reflect across the tug&#x27;s metallic shell. These subject-compatible background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, extra subjects, readable text, abrupt transformations, or discontinuous changes.</p></div>
+        <span class="traj-chip" aria-hidden="true">THIRD-PERSON</span>
+        <button class="expand-btn" type="button" aria-label="Expand Asteroid Ring Tug"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Asteroid Ring Tug</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="scale">
+    <div class="section-head reveal">
+      <span class="eyebrow">Metric scale</span>
+      <h2>Learning the world beneath the pixels</h2>
+      <p class="lede">Every training source shares one physical action scale, so the model has
+        to internalize real size and distance, not just appearance: the same key press always
+        covers the same meters. Far drifts, near rushes — from high altitude the world barely
+        crawls, up close it streams past. Each row pairs the two extremes —
+        <em>same keys, same meters, only the distance to the world changes.</em></p>
+    </div>
+    <div class="wall wall-scale">
+      <figure class="vcard reveal"
+        data-video="videos/scale_alpine_peaks.mp4" data-title="Alpine Peaks" data-note="Kilometers above the range, the same one-meter key presses barely stir the valley — ridgelines crawl past." data-prompt="The camera translates exactly one meter straight forward at constant speed over two seconds. Keep yaw, pitch, roll, focal length, and camera altitude fixed. Every scene object remains static. No cuts, zoom, shake, motion blur, new objects, or geometry changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/scale_alpine_peaks.jpg" src="videos/scale_alpine_peaks.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera translates exactly one meter straight forward at constant speed over two seconds. Keep yaw, pitch, roll, focal length, and camera altitude fixed. Every scene object remains static. No cuts, zoom, shake, motion blur, new objects, or geometry changes.</p></div>
+        <span class="traj-chip" aria-hidden="true">HIGH &amp; SLOW</span>
+        <button class="expand-btn" type="button" aria-label="Expand Alpine Peaks"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Alpine Peaks</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/scale_farmhouse.mp4" data-title="Rural Farmhouse" data-note="The identical forward shuttle squeezed into a farmhouse lane — stone walls a meter away surge past with every press." data-prompt="The camera translates exactly one meter straight forward at constant speed over two seconds. Keep yaw, pitch, roll, focal length, and camera altitude fixed. Every scene object remains static. No cuts, zoom, shake, motion blur, new objects, or geometry changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/scale_farmhouse.jpg" src="videos/scale_farmhouse.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera translates exactly one meter straight forward at constant speed over two seconds. Keep yaw, pitch, roll, focal length, and camera altitude fixed. Every scene object remains static. No cuts, zoom, shake, motion blur, new objects, or geometry changes.</p></div>
+        <span class="traj-chip chip-near" aria-hidden="true">NEAR &amp; FAST</span>
+        <button class="expand-btn" type="button" aria-label="Expand Rural Farmhouse"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Rural Farmhouse</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/scale_seaside_town.mp4" data-title="Seaside Town" data-note="From high over the harbor town, a full key pattern reads as a slow drift along the coastline." data-prompt="The camera translates exactly one meter straight forward at constant speed over two seconds. Keep yaw, pitch, roll, focal length, and camera altitude fixed. Every scene object remains static. No cuts, zoom, shake, motion blur, new objects, or geometry changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/scale_seaside_town.jpg" src="videos/scale_seaside_town.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera translates exactly one meter straight forward at constant speed over two seconds. Keep yaw, pitch, roll, focal length, and camera altitude fixed. Every scene object remains static. No cuts, zoom, shake, motion blur, new objects, or geometry changes.</p></div>
+        <span class="traj-chip" aria-hidden="true">HIGH &amp; SLOW</span>
+        <button class="expand-btn" type="button" aria-label="Expand Seaside Town"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Seaside Town</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/scale_toy_city.mp4" data-title="Toy City" data-note="Down among the building-block towers, each one-meter press crosses whole streets of the miniature town." data-prompt="The camera travels down the street, turns around a roundabout, and enters a miniature plaza; toy cars roll, flags flutter, and blocky trees bounce softly. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/scale_toy_city.jpg" src="videos/scale_toy_city.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera travels down the street, turns around a roundabout, and enters a miniature plaza; toy cars roll, flags flutter, and blocky trees bounce softly. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="traj-chip chip-near" aria-hidden="true">NEAR &amp; FAST</span>
+        <button class="expand-btn" type="button" aria-label="Expand Toy City"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Toy City</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/scale_coastal_flight.mp4" data-title="Coastal Flight" data-note="Soaring along the sea cliffs — coves and headlands slide by slowly no matter how long the keys are held." data-prompt="The camera flies forward, banks around a headland, descends slightly over a bay, and levels out; clouds pass, waves roll, and sunlight moves across water. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/scale_coastal_flight.jpg" src="videos/scale_coastal_flight.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera flies forward, banks around a headland, descends slightly over a bay, and levels out; clouds pass, waves roll, and sunlight moves across water. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+        <span class="traj-chip" aria-hidden="true">HIGH &amp; SLOW</span>
+        <button class="expand-btn" type="button" aria-label="Expand Coastal Flight"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">Coastal Flight</span>
+        </figcaption>
+      </figure>
+      <figure class="vcard reveal"
+        data-video="videos/scale_world_tree.mp4" data-title="World Tree Balcony" data-note="Up close on the tree-house balcony, every press rushes the railing and the giant trunk by." data-prompt="The camera translates exactly one meter to the right at constant speed over two seconds. Keep yaw, pitch, roll, focal length, and camera altitude fixed. Every scene object remains static. No cuts, zoom, shake, motion blur, new objects, or geometry changes.">
+        <video class="js-lazy-video" muted loop playsinline preload="none"
+          poster="videos/scale_world_tree.jpg" src="videos/scale_world_tree.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera translates exactly one meter to the right at constant speed over two seconds. Keep yaw, pitch, roll, focal length, and camera altitude fixed. Every scene object remains static. No cuts, zoom, shake, motion blur, new objects, or geometry changes.</p></div>
+        <span class="traj-chip chip-near" aria-hidden="true">NEAR &amp; FAST</span>
+        <button class="expand-btn" type="button" aria-label="Expand World Tree Balcony"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        <figcaption class="caption">
+          <span class="name">World Tree Balcony</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="horizon">
+    <div class="section-head reveal">
+      <span class="eyebrow">Long horizon</span>
+      <h2>Generation Beyond</h2>
+      <p class="lede">Minute-scale rollouts from a single starting frame.
+        Bounded memory keeps the stream going — <em>the world keeps unfolding.</em></p>
+    </div>
+    <div class="long-list">
+      <article class="longrow reveal">
+        <div class="frame"
+          data-video="videos/long_desert_astronaut.mp4" data-title="Desert Astronaut" data-note="Third person — an astronaut treks the dune field, rover convoy and ridgeline persistent." data-prompt="The world matches the initial scene: An adult astronaut walking across a vast desert training landscape toward a rover and distant hills. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: the astronaut takes deliberate weighted steps, fine dust lifts and settles around the boots, loose suit elements shift subtly, and heat haze shimmers above the distant terrain. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.">
+          <video class="js-lazy-video" muted loop playsinline preload="none"
+            poster="videos/long_desert_astronaut.jpg" src="videos/long_desert_astronaut.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The world matches the initial scene: An adult astronaut walking across a vast desert training landscape toward a rover and distant hills. The established spatial layout, principal forms, material palette, and lighting remain recognizable throughout. Independent environmental motion keeps the world active: the astronaut takes deliberate weighted steps, fine dust lifts and settles around the boots, loose suit elements shift subtly, and heat haze shimmers above the distant terrain. These background motions unfold continuously at varied but physically plausible speeds, with restrained secondary reactions and stable depth relationships. The same world persists coherently over time: architecture, terrain, route structure, subject identity, scale, color, and material appearance remain consistent, with no newly appearing objects, readable text, abrupt transformations, or discontinuous changes.</p></div>
+          <span class="dur-badge" aria-hidden="true">30 s</span>
+        <button class="expand-btn" type="button" aria-label="Expand Desert Astronaut"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        </div>
+        <div class="meta">
+          <span class="idx">01</span>
+          <span class="title">Desert Astronaut</span>
+          <span class="note">Third person — an astronaut treks the dune field, rover convoy and ridgeline persistent.</span>
+        </div>
+      </article>
+      <article class="longrow reveal">
+        <div class="frame"
+          data-video="videos/long_alpine_snowfield.mp4" data-title="Alpine Snowfield — Long" data-note="Weaving shuttle runs over wind-carved snow — ridgelines and rock bands return to view intact." data-prompt="The camera moves forward over the snow and arcs toward the pass; fine powder blows across the surface, clouds drift, and distant shadows slide over the mountains. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+          <video class="js-lazy-video" muted loop playsinline preload="none"
+            poster="videos/long_alpine_snowfield.jpg" src="videos/long_alpine_snowfield.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera moves forward over the snow and arcs toward the pass; fine powder blows across the surface, clouds drift, and distant shadows slide over the mountains. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+          <span class="dur-badge" aria-hidden="true">30 s</span>
+        <button class="expand-btn" type="button" aria-label="Expand Alpine Snowfield — Long"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        </div>
+        <div class="meta">
+          <span class="idx">02</span>
+          <span class="title">Alpine Snowfield — Long</span>
+          <span class="note">Weaving shuttle runs over wind-carved snow — ridgelines and rock bands return to view intact.</span>
+        </div>
+      </article>
+      <article class="longrow reveal">
+        <div class="frame"
+          data-video="videos/long_cloud_teahouse.mp4" data-title="Cloud Teahouse Village" data-note="A steady glide across wooden bridges over a sea of clouds into a golden-hour floating teahouse village, ending inside a lantern-lit porch." data-prompt="The camera crosses a bridge, moves through a lantern lane, and enters an open cloud plaza; lanterns sway and clouds drift below. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+          <video class="js-lazy-video" muted loop playsinline preload="none"
+            poster="videos/long_cloud_teahouse.jpg" src="videos/long_cloud_teahouse.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera crosses a bridge, moves through a lantern lane, and enters an open cloud plaza; lanterns sway and clouds drift below. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+          <span class="hero-tag">Hero shot</span>
+          <span class="dur-badge" aria-hidden="true">64 s</span>
+        <button class="expand-btn" type="button" aria-label="Expand Cloud Teahouse Village"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        </div>
+        <div class="meta">
+          <span class="idx">03</span>
+          <span class="title">Cloud Teahouse Village</span>
+          <span class="note">A steady glide across wooden bridges over a sea of clouds into a golden-hour floating teahouse village, ending inside a lantern-lit porch.</span>
+        </div>
+      </article>
+      <article class="longrow reveal">
+        <div class="frame"
+          data-video="videos/long_robot_district.mp4" data-title="Robot District" data-note="A bright futuristic plaza with robots, moving walkways and holo-screens, ending in a clean tree-lined courtyard." data-prompt="The camera moves along a sidewalk, turns through a circular gate, and enters a busy plaza; robots walk, panels reconfigure, and lights pulse. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+          <video class="js-lazy-video" muted loop playsinline preload="none"
+            poster="videos/long_robot_district.jpg" src="videos/long_robot_district.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera moves along a sidewalk, turns through a circular gate, and enters a busy plaza; robots walk, panels reconfigure, and lights pulse. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+          <span class="dur-badge" aria-hidden="true">64 s</span>
+        <button class="expand-btn" type="button" aria-label="Expand Robot District"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        </div>
+        <div class="meta">
+          <span class="idx">04</span>
+          <span class="title">Robot District</span>
+          <span class="note">A bright futuristic plaza with robots, moving walkways and holo-screens, ending in a clean tree-lined courtyard.</span>
+        </div>
+      </article>
+      <article class="longrow reveal">
+        <div class="frame"
+          data-video="videos/long_enchanted_wood.mp4" data-title="Enchanted Wood" data-note="A lush glowing forest path with bioluminescent flowers and a stone bridge — vivid, dense, instantly readable." data-prompt="The camera moves deeper, turns around living roots, and passes beneath a vine arch; lights swirl, branches bend, and moonbeams shift. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+          <video class="js-lazy-video" muted loop playsinline preload="none"
+            poster="videos/long_enchanted_wood.jpg" src="videos/long_enchanted_wood.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera moves deeper, turns around living roots, and passes beneath a vine arch; lights swirl, branches bend, and moonbeams shift. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+          <span class="dur-badge" aria-hidden="true">30 s</span>
+        <button class="expand-btn" type="button" aria-label="Expand Enchanted Wood"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        </div>
+        <div class="meta">
+          <span class="idx">05</span>
+          <span class="title">Enchanted Wood</span>
+          <span class="note">A lush glowing forest path with bioluminescent flowers and a stone bridge — vivid, dense, instantly readable.</span>
+        </div>
+      </article>
+      <article class="longrow reveal">
+        <div class="frame"
+          data-video="videos/long_new_realm.mp4" data-title="New Realm" data-note="An epic vista through a giant ring portal onto a waterfall valley city — the strongest single composition in the pool." data-prompt="The camera approaches the rippling boundary, moves smoothly through, and continues along a valley path; lighting shifts, plants sway, and waterfalls flow. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.">
+          <video class="js-lazy-video" muted loop playsinline preload="none"
+            poster="videos/long_new_realm.jpg" src="videos/long_new_realm.mp4" aria-hidden="true"></video>
+        <div class="prompt-veil" aria-hidden="true"><span class="p-label">Prompt</span><p>The camera approaches the rippling boundary, moves smoothly through, and continues along a valley path; lighting shifts, plants sway, and waterfalls flow. Keep the camera motion suitable for continuous scene roaming. Maintain the exact scene identity, layout, geometry, and any subject appearance with smooth temporal coherence, natural physics, no cuts, no new objects, no text, and no sudden transformations.</p></div>
+          <span class="dur-badge" aria-hidden="true">30 s</span>
+        <button class="expand-btn" type="button" aria-label="Expand New Realm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6.5 L14 2 M14 2 h-4 M14 2 v4"/><path d="M6.5 9.5 L2 14 M2 14 h4 M2 14 v-4"/></svg></button>
+        </div>
+        <div class="meta">
+          <span class="idx">06</span>
+          <span class="title">New Realm</span>
+          <span class="note">An epic vista through a giant ring portal onto a waterfall valley city — the strongest single composition in the pool.</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+
+  <footer class="footer" id="footer">
+    <div class="footer-inner reveal">
+      <div class="footer-logo">
+        <img src="assets/logo_dark.png" alt="ReWorld logo" loading="lazy">
+      </div>
+      <p class="authors">
+        Zhifei Chen<span class="eq">*</span>, Luozhou Wang<span class="eq">*</span>,
+        Guibao Shen, Dongyu Yan, Shuai Yang, Tianshuo Xu, Yihua Du, Wei Wang,
+        Tianyi Gui, Lianghua Huang, Yingcong Chen
+      </p>
+      <p class="affil"><span class="eq">*</span> Equal contribution &nbsp;·&nbsp; HKUST(GZ) &amp; ATH, Alibaba</p>
+      <div class="footer-actions">
+        <a class="btn-paper" href="https://arxiv.org/abs/2608.23565" target="_blank" rel="noopener">Paper (arXiv:2608.23565)</a>
+        <button class="btn-ghost" id="copyBib" type="button">Copy BibTeX</button>
+      </div>
+      <div class="bib-wrap">
+        <div class="bib-head">
+          <h4>BibTeX</h4>
+        </div>
+        <pre id="bibtex">@article{chen2026reworld,
+  title   = {ReWorld: A Real-Time Interactive World Model
+             with Long-Horizon Memory},
+  author  = {Chen, Zhifei and Wang, Luozhou and Shen, Guibao and
+             Yan, Dongyu and Yang, Shuai and Xu, Tianshuo and
+             Du, Yihua and Wang, Wei and Gui, Tianyi and
+             Huang, Lianghua and Chen, Yingcong},
+  journal = {arXiv preprint arXiv:2608.23565},
+  year    = {2026}
+}</pre>
+      </div>
+      <p class="copyright">&copy; 2026 ReWorld authors. Videos on this page are generated by the model.</p>
+    </div>
+  </footer>
+
+</main>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Video viewer">
+  <button class="lb-close" id="lbClose" type="button" aria-label="Close video viewer">&#10005;</button>
+  <div class="lb-panel">
+    <video id="lbVideo" controls muted loop playsinline preload="auto"></video>
+    <div class="lb-meta">
+      <span class="lb-title" id="lbTitle"></span>
+      <span class="lb-note" id="lbNote"></span>
+    </div>
+    <div class="lb-prompt" id="lbPrompt" hidden>
+      <span class="p-label">Prompt</span>
+      <p id="lbPromptText"></p>
+    </div>
+  </div>
+</div>
+
+<script src="assets/site.js"></script>
+</body>
+</html>
