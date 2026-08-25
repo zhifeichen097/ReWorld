@@ -16,10 +16,10 @@
 
 <br>
 
-<a href="assets/demo/reworld_demo.mp4">
+<a href="assets/demo/reworld_demo_small.mp4">
   <img src="assets/demo/reworld_demo_preview.gif" alt="ReWorld demo reel — click for the full video" width="100%">
 </a>
-<sub><i>▶ Click the preview for the full 70-second demo reel.</i></sub>
+<sub><i>▶ Click the preview to watch the demo reel with sound (HD file: assets/demo/reworld_demo.mp4).</i></sub>
 
 </div>
 
