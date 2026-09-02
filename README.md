@@ -10,7 +10,8 @@
 <p>
   <a href="https://zhifeichen097.github.io/ReWorld/"><img src="https://img.shields.io/badge/Project%20Page-ReWorld-4A90D9?logo=googlechrome&logoColor=white" alt="Project Page"></a>
   <a href="https://arxiv.org/abs/2608.23565"><img src="https://img.shields.io/badge/Paper-arXiv%3A2608.23565-B31B1B?logo=arxiv&logoColor=white" alt="Paper on arXiv"></a>
-  <a href="https://huggingface.co/"><img src="https://img.shields.io/badge/Checkpoints-Coming%20Soon-FFD21E?logo=huggingface&logoColor=black" alt="Checkpoints coming soon"></a>
+  <a href="https://huggingface.co/zhifeichen097/ReWorld-5B"><img src="https://img.shields.io/badge/Checkpoints-HuggingFace-FFD21E?logo=huggingface&logoColor=black" alt="Checkpoints on HuggingFace"></a>
+  <a href="https://modelscope.cn/models/zhifeichen097/ReWorld-5B"><img src="https://img.shields.io/badge/Checkpoints-ModelScope-624AFF" alt="Checkpoints on ModelScope"></a>
   <a href="LICENSE.md"><img src="https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-8A8F98" alt="License: CC BY-NC-SA 4.0"></a>
 </p>
 
@@ -32,7 +33,8 @@ ReWorld is an interactive world model: you drive the camera with keyboard-and-mo
 ## News
 
 - **2026-08** — Paper released on arXiv: [ReWorld: An Interactive World Model with Long-Horizon Memory](https://arxiv.org/abs/2608.23565).
-- **2026-08** — Inference code released. Pretrained checkpoints are on the way — see [Checkpoints](#checkpoints).
+- **2026-09** — Pretrained checkpoints released on [HuggingFace](https://huggingface.co/zhifeichen097/ReWorld-5B) and [ModelScope](https://modelscope.cn/models/zhifeichen097/ReWorld-5B).
+- **2026-08** — Inference code released.
 
 ## Installation
 
@@ -57,22 +59,38 @@ Notes:
 
 ## Checkpoints
 
-**ReWorld weights are not released yet.** The table below lists what will be published; until then, the inference commands cannot be run end-to-end. The Wan2.2 base model is already public and can be downloaded today.
+ReWorld-5B weights are released on [HuggingFace](https://huggingface.co/zhifeichen097/ReWorld-5B) and [ModelScope](https://modelscope.cn/models/zhifeichen097/ReWorld-5B). The Wan2.2 base model provides the T5 text encoder, tokenizer, and VAE.
 
-| Checkpoint | Resolution | Latent frames | File (expected) | Status |
+| Checkpoint | Resolution | Latent frames | File | Size |
 |---|---|---|---|---|
-| ReWorld generator (EMA) | 704×1280 | 96 | `checkpoints/reworld_generator_ema.pt` | Coming soon |
-| ReWorld 4-step DMD LoRA | 704×1280 | 96 | `checkpoints/reworld_dmd_lora.pt` | Coming soon |
-| Wan2.2-TI2V-5B (base, VAE + T5) | — | — | `checkpoints/Wan2.2-TI2V-5B/` | [Official Wan release](https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B) |
+| ReWorld generator (EMA) | 704×1280 | 96 | [reworld_5b_ar_ema.pt](https://huggingface.co/zhifeichen097/ReWorld-5B/blob/main/reworld_5b_ar_ema.pt) | 22.3 GB |
+| ReWorld 4-step DMD LoRA | 704×1280 | 96 | [reworld_5b_dmd_lora.pt](https://huggingface.co/zhifeichen097/ReWorld-5B/blob/main/reworld_5b_dmd_lora.pt) | 1.3 GB |
+| Wan2.2-TI2V-5B (base, VAE + T5) | — | — | [Official Wan release](https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B) | — |
+
+Download everything:
+
+```bash
+# HuggingFace
+pip install "huggingface_hub[cli]"
+huggingface-cli download zhifeichen097/ReWorld-5B --local-dir checkpoints/ReWorld-5B
+huggingface-cli download Wan-AI/Wan2.2-TI2V-5B --local-dir checkpoints/Wan2.2-TI2V-5B
+
+# or ModelScope
+pip install modelscope
+modelscope download zhifeichen097/ReWorld-5B --local_dir checkpoints/ReWorld-5B
+```
 
 Expected layout (paths are set in `configs/plucker720p_dmd_infer.yaml`; the base-model directory can also be pointed to via the `WAN_MODEL_DIR` environment variable):
 
 ```
 checkpoints/
-├── Wan2.2-TI2V-5B/            # official Wan2.2 release (T5, tokenizer, VAE)
-├── reworld_generator_ema.pt   # coming soon
-└── reworld_dmd_lora.pt        # coming soon
+├── Wan2.2-TI2V-5B/              # official Wan2.2 release (T5, tokenizer, VAE)
+└── ReWorld-5B/
+    ├── reworld_5b_ar_ema.pt     # generator EMA weights (multi-step & real-time base)
+    └── reworld_5b_dmd_lora.pt   # rank-128 DMD LoRA (attach for 4-step real-time mode)
 ```
+
+Point `model_ckpt` / `lora_ckpt` in the config (or `--checkpoint_path` / `--lora_checkpoint_path`) at the two downloaded files.
 
 ## Inference
 
