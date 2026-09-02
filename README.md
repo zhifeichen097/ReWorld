@@ -34,7 +34,7 @@ ReWorld is an interactive world model: you drive the camera with keyboard-and-mo
 
 - **2026-09** — 🎉 Pretrained checkpoints released on [HuggingFace](https://huggingface.co/zhifeichen097/ReWorld-5B) and [ModelScope](https://modelscope.cn/models/zhifeichen097/ReWorld-5B).
 - **2026-08** — Paper released on arXiv: [ReWorld: An Interactive World Model with Long-Horizon Memory](https://arxiv.org/abs/2608.23565).
-- **2026-08** — Inference code released.
+- **2026-08** — Both Training & Inference code released.
 
 ## Installation
 
